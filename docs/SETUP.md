@@ -163,6 +163,59 @@ curl -X POST http://localhost:8080/api/auth/signup \
 
 詳細なテスト方法は [`docs/API_TESTING.md`](API_TESTING.md) を参照してください。
 
+## 7. Dockerを使った起動（オプション）
+
+Dockerを使うと、Goをインストールしなくてもアプリケーションを起動できます。
+
+### 7-1. Dockerのインストール
+
+#### macOS
+
+```bash
+# Homebrewでインストール
+brew install --cask docker
+
+# または公式サイトからダウンロード
+# https://www.docker.com/products/docker-desktop
+```
+
+#### Windows / Linux
+
+[Docker公式サイト](https://www.docker.com/products/docker-desktop)からインストールしてください。
+
+### 7-2. Dockerイメージをビルド
+
+```bash
+# プロジェクトルートで実行
+docker build -t subscription-manager-api .
+```
+
+### 7-3. Dockerコンテナを起動
+
+```bash
+# 環境変数を設定して起動
+docker run -p 8080:8080 \
+  -e DATABASE_URL="postgres://user:pass@host:5432/dbname" \
+  -e JWT_SECRET="your-secret-key" \
+  -e PORT="8080" \
+  subscription-manager-api
+```
+
+### 7-4. バックグラウンドで実行
+
+```bash
+docker run -d \
+  -p 8080:8080 \
+  -e DATABASE_URL="postgres://..." \
+  -e JWT_SECRET="your-secret" \
+  --name subscription-api \
+  subscription-manager-api
+```
+
+**注意**: 開発時は通常の`go run`を使うことをおすすめします。Dockerは主にデプロイ時に使用します。
+
+詳細は [`docs/DEPLOYMENT.md`](./DEPLOYMENT.md) を参照してください。
+
 ## トラブルシューティング
 
 ### Goがインストールされていない
@@ -229,7 +282,8 @@ A: ターミナルで `Ctrl + C` を押してください。
 
 ## 次のステップ
 
-- [`docs/API_TESTING.md`](API_TESTING.md) - APIのテスト方法
-- [`docs/ARCHITECTURE.md`](ARCHITECTURE.md) - アーキテクチャの説明
-- [`docs/WORKFLOW.md`](WORKFLOW.md) - 開発ワークフロー
+- [`docs/API_TESTING.md`](./API_TESTING.md) - APIのテスト方法
+- [`docs/ARCHITECTURE.md`](./ARCHITECTURE.md) - アーキテクチャの説明
+- [`docs/WORKFLOW.md`](./WORKFLOW.md) - 開発ワークフロー
+- [`docs/DEPLOYMENT.md`](./DEPLOYMENT.md) - Dockerとデプロイの詳細
 

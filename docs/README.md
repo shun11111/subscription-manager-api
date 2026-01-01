@@ -53,6 +53,8 @@
 
 - **[SETUP.md](./SETUP.md)**: 環境構築の完全ガイド（Go初心者向け）
 - **[ENV_SETUP.md](./ENV_SETUP.md)**: 環境変数の設定方法
+- **[JWT_SECRET.md](./JWT_SECRET.md)**: JWT_SECRETの詳細解説
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)**: Dockerとデプロイの詳細ガイド
 
 ### アーキテクチャ・設計関連
 
@@ -63,6 +65,7 @@
 
 - **[WORKFLOW.md](./WORKFLOW.md)**: 新機能追加のワークフロー
 - **[API_TESTING.md](./API_TESTING.md)**: APIのテスト方法
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)**: Dockerとデプロイの詳細ガイド
 
 ### 仕様書関連
 
@@ -85,6 +88,8 @@
 2. ENV_SETUP.md（環境変数設定）
 3. ARCHITECTURE.md（アーキテクチャ理解）
 4. WORKFLOW.md（開発の流れ）
+
+デプロイを行う場合は、DEPLOYMENT.mdも参照してください。
 
 ### Q: コードを理解したいのですが、どこから始めればいいですか？
 

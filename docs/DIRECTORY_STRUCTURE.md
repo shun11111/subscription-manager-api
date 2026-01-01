@@ -15,6 +15,7 @@
 **関連ドキュメント:**
 - [`ARCHITECTURE.md`](./ARCHITECTURE.md) - アーキテクチャの説明
 - [`WORKFLOW.md`](./WORKFLOW.md) - 開発ワークフロー
+- [`DEPLOYMENT.md`](./DEPLOYMENT.md) - Dockerとデプロイの詳細
 
 ---
 
@@ -42,6 +43,9 @@
 │   ├── specs/             # Markdown仕様書
 │   └── openapi.yaml       # OpenAPI仕様
 ├── migrations/            # データベースマイグレーション
+├── Dockerfile             # Dockerイメージのビルド設定
+├── .dockerignore          # Dockerビルド時に除外するファイル
+├── fly.toml               # Fly.ioのデプロイ設定
 └── Makefile              # ビルド・生成コマンド
 ```
 

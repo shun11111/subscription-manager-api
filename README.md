@@ -29,6 +29,23 @@ export $(grep -v '^#' .env | xargs)
 go run ./cmd/api/main.go
 ```
 
+### Dockerを使った起動（オプション）
+
+Dockerを使うと、Goをインストールしなくても起動できます：
+
+```bash
+# Dockerイメージをビルド
+docker build -t subscription-manager-api .
+
+# コンテナを起動
+docker run -p 8080:8080 \
+  -e DATABASE_URL="postgres://..." \
+  -e JWT_SECRET="your-secret" \
+  subscription-manager-api
+```
+
+詳細は [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) を参照してください。
+
 ## 📚 ドキュメント
 
 **初めての方は [`docs/README.md`](docs/README.md) から始めてください。**  
@@ -53,6 +70,7 @@ go run ./cmd/api/main.go
 - **[docs/DIRECTORY_STRUCTURE.md](docs/DIRECTORY_STRUCTURE.md)** - ディレクトリ構成の説明
 - **[docs/WORKFLOW.md](docs/WORKFLOW.md)** - 開発ワークフロー
 - **[docs/API_TESTING.md](docs/API_TESTING.md)** - APIのテスト方法
+- **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)** - Dockerとデプロイの詳細
 
 ## API エンドポイント
 
