@@ -1,0 +1,29 @@
+# Exclude generate.go from Docker build
+generate.go
+
+# Exclude other build artifacts
+*.exe
+*.test
+*.out
+main
+
+# Exclude environment files
+.env
+.env.local
+
+# Exclude IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Exclude git
+.git/
+.gitignore
+
+# Exclude documentation (optional, but reduces build context)
+docs/
+
+# Exclude test files (optional)
+*_test.go
+
