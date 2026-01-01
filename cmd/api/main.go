@@ -54,6 +54,15 @@ func main() {
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
 
+	// ヘルスチェック（ルートパス）
+	e.GET("/", func(c echo.Context) error {
+		return c.JSON(200, map[string]interface{}{
+			"status":  "ok",
+			"message": "Subscription Manager API",
+			"version": "1.0.0",
+		})
+	})
+
 	// ルーティング
 	api := e.Group("/api")
 	{
