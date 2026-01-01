@@ -1,0 +1,11 @@
+package: api
+generate:
+  types:
+    skip-prune: true
+  server:
+    skip-prune: true
+  echo-server:
+    skip-prune: true
+output: internal/api/openapi.gen.go
+
+

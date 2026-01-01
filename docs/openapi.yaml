@@ -1,0 +1,653 @@
+openapi: 3.0.3
+info:
+  title: Subscription Manager API
+  version: 1.0.0
+  description: サブスクリプション管理API
+
+servers:
+  - url: http://localhost:8080
+    description: ローカル開発サーバー
+
+paths:
+  /auth/signup:
+    post:
+      operationId: SignUp
+      summary: ユーザー登録
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+      responses:
+        '201':
+          description: ユーザー作成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignUpResponse'
+        '400':
+          description: バリデーションエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/login:
+    post:
+      operationId: Login
+      summary: ログイン
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: ログイン成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: 認証失敗
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /subscriptions:
+    get:
+      operationId: ListSubscriptions
+      summary: サブスクリプション一覧取得
+      tags:
+        - subscriptions
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Subscription'
+        '401':
+          description: 認証エラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      operationId: CreateSubscription
+      summary: サブスクリプション作成
+      tags:
+        - subscriptions
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSubscriptionRequest'
+      responses:
+        '201':
+          description: 作成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        '400':
+          description: バリデーションエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 認証エラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /subscriptions/{id}:
+    get:
+      operationId: GetSubscription
+      summary: サブスクリプション詳細取得
+      tags:
+        - subscriptions
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        '401':
+          description: 認証エラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 見つからない
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      operationId: UpdateSubscription
+      summary: サブスクリプション更新
+      tags:
+        - subscriptions
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSubscriptionRequest'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        '400':
+          description: バリデーションエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 認証エラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 見つからない
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /plans:
+    get:
+      operationId: ListPlans
+      summary: プラン一覧取得
+      tags:
+        - plans
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Plan'
+        '401':
+          description: 認証エラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      operationId: CreatePlan
+      summary: プラン作成
+      tags:
+        - plans
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePlanRequest'
+      responses:
+        '201':
+          description: 作成成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plan'
+        '400':
+          description: バリデーションエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 認証エラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /plans/{id}:
+    get:
+      operationId: GetPlan
+      summary: プラン詳細取得
+      tags:
+        - plans
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plan'
+        '401':
+          description: 認証エラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 見つからない
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      operationId: UpdatePlan
+      summary: プラン更新
+      tags:
+        - plans
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePlanRequest'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plan'
+        '400':
+          description: バリデーションエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: 認証エラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 見つからない
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      operationId: DeletePlan
+      summary: プラン削除
+      tags:
+        - plans
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: 削除成功
+        '401':
+          description: 認証エラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: 見つからない
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # 共通フィールド
+    BaseEntity:
+      type: object
+      required:
+        - id
+        - created_at
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: エンティティの一意識別子
+        created_at:
+          type: string
+          format: date-time
+          description: 作成日時
+        updated_at:
+          type: string
+          format: date-time
+          description: 更新日時
+
+    # 認証関連
+    SignUpRequest:
+      type: object
+      required:
+        - email
+        - password
+        - name
+      properties:
+        email:
+          type: string
+          format: email
+          description: メールアドレス
+        password:
+          type: string
+          minLength: 8
+          description: パスワード（8文字以上）
+        name:
+          type: string
+          minLength: 1
+          description: ユーザー名
+
+    SignUpResponse:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        token:
+          type: string
+          description: JWTトークン
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWTトークン
+
+    # サブスクリプション関連
+    Subscription:
+      allOf:
+        - $ref: '#/components/schemas/BaseEntity'
+        - type: object
+          required:
+            - user_id
+            - name
+            - price
+            - billing_cycle
+            - next_billing_date
+          properties:
+            user_id:
+              type: string
+              format: uuid
+              description: ユーザーID
+            name:
+              type: string
+              description: サブスクリプション名
+            price:
+              type: number
+              format: float
+              description: 月額料金
+            billing_cycle:
+              type: string
+              enum:
+                - monthly
+                - yearly
+              description: 課金サイクル
+            next_billing_date:
+              type: string
+              format: date
+              description: 次回課金日
+            description:
+              type: string
+              description: 説明（オプション）
+
+    CreateSubscriptionRequest:
+      type: object
+      required:
+        - name
+        - price
+        - billing_cycle
+        - next_billing_date
+      properties:
+        name:
+          type: string
+          description: サブスクリプション名
+        price:
+          type: number
+          format: float
+          description: 月額料金
+        billing_cycle:
+          type: string
+          enum:
+            - monthly
+            - yearly
+          description: 課金サイクル
+        next_billing_date:
+          type: string
+          format: date
+          description: 次回課金日
+        description:
+          type: string
+          description: 説明（オプション）
+
+    UpdateSubscriptionRequest:
+      type: object
+      required:
+        - name
+        - price
+        - billing_cycle
+        - next_billing_date
+      properties:
+        name:
+          type: string
+          description: サブスクリプション名
+        price:
+          type: number
+          format: float
+          description: 月額料金
+        billing_cycle:
+          type: string
+          enum:
+            - monthly
+            - yearly
+          description: 課金サイクル
+        next_billing_date:
+          type: string
+          format: date
+          description: 次回課金日
+        description:
+          type: string
+          description: 説明（オプション）
+
+    # プラン・価格マスター関連
+    Plan:
+      allOf:
+        - $ref: '#/components/schemas/BaseEntity'
+        - type: object
+          required:
+            - name
+            - price
+            - billing_cycle
+            - is_active
+          properties:
+            name:
+              type: string
+              description: プラン名
+            description:
+              type: string
+              description: 説明（オプション）
+            price:
+              type: number
+              format: float
+              description: 価格
+            billing_cycle:
+              type: string
+              enum:
+                - monthly
+                - yearly
+              description: 課金サイクル
+            features:
+              type: array
+              items:
+                type: string
+              description: 機能リスト（オプション）
+            is_active:
+              type: boolean
+              description: 有効フラグ
+
+    CreatePlanRequest:
+      type: object
+      required:
+        - name
+        - price
+        - billing_cycle
+        - is_active
+      properties:
+        name:
+          type: string
+          description: プラン名
+        description:
+          type: string
+          description: 説明（オプション）
+        price:
+          type: number
+          format: float
+          description: 価格
+        billing_cycle:
+          type: string
+          enum:
+            - monthly
+            - yearly
+          description: 課金サイクル
+        features:
+          type: array
+          items:
+            type: string
+          description: 機能リスト（オプション）
+        is_active:
+          type: boolean
+          description: 有効フラグ
+
+    UpdatePlanRequest:
+      type: object
+      required:
+        - name
+        - price
+        - billing_cycle
+        - is_active
+      properties:
+        name:
+          type: string
+          description: プラン名
+        description:
+          type: string
+          description: 説明（オプション）
+        price:
+          type: number
+          format: float
+          description: 価格
+        billing_cycle:
+          type: string
+          enum:
+            - monthly
+            - yearly
+          description: 課金サイクル
+        features:
+          type: array
+          items:
+            type: string
+          description: 機能リスト（オプション）
+        is_active:
+          type: boolean
+          description: 有効フラグ
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: string
+
