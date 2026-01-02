@@ -48,6 +48,21 @@
 
 **🤖 AI向け:** このファイルと `docs/WORKFLOW.md` / `docs/specs/*.md` / `docs/API_TESTING.md` を前提に動くこと。
 
+### ⚠️ 重要: フロントエンドも含めて実装する場合
+
+**🤖 AI向け:** ユーザーが「新画面を追加」と指示した場合、**フロントエンド（`subscription-manager-admin`）の実装も含める**ことが一般的です。
+
+**必ず [`docs/INTEGRATED_DEVELOPMENT_FLOW.md`](docs/INTEGRATED_DEVELOPMENT_FLOW.md) を参照してください。**
+
+このドキュメントには、API実装とフロントエンド実装の**完全な統合フロー**が記載されています。
+
+- API実装（このファイルの手順）
+- フロントエンド実装（TypeScript、Next.js、React）
+- 統合テスト
+- 最終確認
+
+**新画面追加時は、必ず統合フロードキュメントに従って、APIとフロントエンドの両方を実装してください。**
+
 ---
 
 ## 3. 新しい画面を追加するときのAIの手順
@@ -55,6 +70,10 @@
 **🤖 AI向け:** 以下の手順を**可能な限り自動でツールを叩きながら**実行すること。
 
 **👤 人間向け:** このセクションはAIが自動的に実行する手順です。手動で実装する場合は [`docs/WORKFLOW.md`](docs/WORKFLOW.md) を参照してください。
+
+**⚠️ 重要:** 新画面追加時は、**必ず [`docs/INTEGRATED_DEVELOPMENT_FLOW.md`](docs/INTEGRATED_DEVELOPMENT_FLOW.md) を参照**し、APIとフロントエンドの両方を実装してください。
+
+以下の手順は**API実装のみ**の手順です。フロントエンド実装は統合フロードキュメントを参照してください。
 
 ### 3-1. 仕様書（Markdown）の作成/更新
 

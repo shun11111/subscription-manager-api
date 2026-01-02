@@ -69,6 +69,7 @@ docker run -p 8080:8080 \
 - **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** - アーキテクチャの説明
 - **[docs/DIRECTORY_STRUCTURE.md](docs/DIRECTORY_STRUCTURE.md)** - ディレクトリ構成の説明
 - **[docs/WORKFLOW.md](docs/WORKFLOW.md)** - 開発ワークフロー
+- **[docs/INTEGRATED_DEVELOPMENT_FLOW.md](docs/INTEGRATED_DEVELOPMENT_FLOW.md)** - **統合開発フロー（フロント+バックエンド）** ⭐ 新画面追加時は必ず参照
 - **[docs/API_TESTING.md](docs/API_TESTING.md)** - APIのテスト方法
 - **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)** - Dockerとデプロイの詳細
 
