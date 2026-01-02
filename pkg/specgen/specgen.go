@@ -21,14 +21,14 @@ type SpecDoc struct {
 
 // Endpoint はAPIエンドポイントの定義
 type Endpoint struct {
-	Method      string   // GET, POST, PUT, DELETE
-	Path        string   // /subscriptions
-	Summary     string   // 説明
-	Auth        bool     // 認証が必要か
-	Request     string   // リクエスト型名（空文字列の場合はなし）
-	Response    string   // レスポンス型名
-	Params      []Param  // パスパラメータ
-	ErrorCodes  []string // エラーコード（例: ["400", "401"]）
+	Method     string   // GET, POST, PUT, DELETE
+	Path       string   // /subscriptions
+	Summary    string   // 説明
+	Auth       bool     // 認証が必要か
+	Request    string   // リクエスト型名（空文字列の場合はなし）
+	Response   string   // レスポンス型名
+	Params     []Param  // パスパラメータ
+	ErrorCodes []string // エラーコード（例: ["400", "401"]）
 }
 
 // Param はパスパラメータ
@@ -144,7 +144,7 @@ func parseEndpoints(content string) []Endpoint {
 			for _, line := range paramLines {
 				if strings.HasPrefix(line, "-") {
 					// - `id`: uuid (path) の形式
-					if paramMatch := regexp.MustCompile(`\`([^\`]+)\`:\s*(\w+)\s*\((\w+)\)`).FindStringSubmatch(line); len(paramMatch) > 3 {
+					if paramMatch := regexp.MustCompile("`([^`]+)`:\\s*(\\w+)\\s*\\((\\w+)\\)").FindStringSubmatch(line); len(paramMatch) > 3 {
 						endpoint.Params = append(endpoint.Params, Param{
 							Name:     paramMatch[1],
 							Type:     paramMatch[2],
@@ -202,7 +202,7 @@ func parseModels(content string) []Model {
 		section := modelSection[sectionStart : sectionStart+sectionEnd]
 
 		// フィールドを抽出
-		fieldRe := regexp.MustCompile(`-\s*\`([^\`]+)\`:\s*(\w+)\s*(\(必須\)|\(オプション\))?`)
+		fieldRe := regexp.MustCompile("-\\s*`([^`]+)`:\\s*(\\w+)\\s*(\\(必須\\)|\\(オプション\\))?")
 		fieldMatches := fieldRe.FindAllStringSubmatch(section, -1)
 
 		for _, fieldMatch := range fieldMatches {
@@ -277,11 +277,11 @@ func GenerateOpenAPI(specsDir string, outputPath string) error {
 
 // OpenAPISpec はOpenAPI仕様の構造
 type OpenAPISpec struct {
-	OpenAPI    string                 `yaml:"openapi"`
-	Info       map[string]interface{} `yaml:"info"`
+	OpenAPI    string                   `yaml:"openapi"`
+	Info       map[string]interface{}   `yaml:"info"`
 	Servers    []map[string]interface{} `yaml:"servers"`
-	Paths      map[string]interface{} `yaml:"paths"`
-	Components map[string]interface{} `yaml:"components"`
+	Paths      map[string]interface{}   `yaml:"paths"`
+	Components map[string]interface{}   `yaml:"components"`
 }
 
 // buildOpenAPI はエンドポイントとモデルからOpenAPIを構築
@@ -304,4 +304,3 @@ func buildOpenAPI(endpoints []Endpoint, models []Model) *OpenAPISpec {
 		Components: map[string]interface{}{},
 	}
 }
-
