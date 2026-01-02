@@ -164,7 +164,17 @@ make gen-code
 
 **🤖 AI向け:** フロントエンド側の実装を完了させます。`subscription-manager-admin` リポジトリで作業します。
 
-#### 3-1. TypeScript型定義の生成（推奨）
+#### 3-1. フロントエンド開発ガイドの確認
+
+**🤖 AI向け:** フロントエンド実装前に、必ず以下を確認してください：
+
+- **`subscription-manager-admin/AI_DEVELOPMENT_GUIDE.md`** - フロントエンド開発の完全ガイド
+- このガイドには、利用可能なコンポーネント、テンプレート、開発フローが記載されています
+
+**重要:** このプロジェクトでは**Storybook**と**共通コンポーネントライブラリ**を使用します。  
+基本的に既存コンポーネントを組み合わせて画面を作成してください。
+
+#### 3-2. TypeScript型定義の生成（推奨）
 
 OpenAPIからTypeScript型を自動生成する場合：
 
@@ -177,7 +187,7 @@ npx openapi-typescript ../subscription-manager-api/docs/openapi.yaml -o src/type
 
 **注意:** 現在は手動で型定義を作成する場合もあります。
 
-#### 3-2. APIクライアント関数の作成
+#### 3-3. APIクライアント関数の作成
 
 - `lib/api/{画面名}.ts` を作成
 - 各エンドポイントに対応する関数を実装
@@ -283,7 +293,16 @@ export async function delete{Resource}(id: string) {
 }
 ```
 
-#### 3-3. ページコンポーネントの作成
+#### 3-4. ページコンポーネントの作成
+
+**🤖 AI向け:** ページコンポーネントは、**既存のテンプレートを使用**して作成してください。
+
+利用可能なテンプレート：
+- **`ListPageTemplate`**: 一覧画面用
+- **`FormPageTemplate`**: フォーム画面用（新規作成・編集）
+- **`DetailPageTemplate`**: 詳細画面用
+
+詳細は `subscription-manager-admin/AI_DEVELOPMENT_GUIDE.md` を参照してください。
 
 **一覧画面**（該当する場合）:
 - `app/{画面名}/page.tsx` を作成
@@ -306,13 +325,13 @@ export async function delete{Resource}(id: string) {
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getToken } from '@/lib/auth';
+import { ListPageTemplate, Button } from '@/components';
 import { list{Resource} } from '@/lib/api/{画面名}';
 
 export default function {画面名}Page() {
   const router = useRouter();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
 
   useEffect(() => {
     const token = getToken();
@@ -320,7 +339,6 @@ export default function {画面名}Page() {
       router.push('/login');
       return;
     }
-
     loadData();
   }, [router]);
 
@@ -330,74 +348,56 @@ export default function {画面名}Page() {
       const result = await list{Resource}();
       setData(result);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load data');
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
   return (
-    <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">{画面名}</h1>
-        <button
-          onClick={() => router.push('/{画面名}/new')}
-          className="px-4 py-2 bg-blue-500 text-white rounded"
-        >
-          新規作成
-        </button>
-      </div>
-
-      <table className="w-full border-collapse border border-gray-300">
-        <thead>
-          <tr>
-            <th className="border border-gray-300 p-2">ID</th>
-            {/* 他のカラム */}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item) => (
-            <tr key={item.id}>
-              <td className="border border-gray-300 p-2">{item.id}</td>
-              {/* 他のカラム */}
-              <td className="border border-gray-300 p-2">
-                <button
-                  onClick={() => router.push(`/{画面名}/${item.id}`)}
-                  className="text-blue-500"
-                >
-                  詳細
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <ListPageTemplate
+      title="{画面名}"
+      data={data}
+      columns={[
+        { key: 'name', label: 'Name' },
+        { key: 'price', label: 'Price', render: (item) => `¥${item.price}` },
+      ]}
+      onCreateClick={() => router.push('/{画面名}/new')}
+      onRowClick={(item) => router.push(`/{画面名}/${item.id}`)}
+      actions={(item) => (
+        <>
+          <Button variant="ghost" size="sm">Edit</Button>
+          <Button variant="danger" size="sm">Delete</Button>
+        </>
+      )}
+      isLoading={loading}
+    />
   );
 }
 ```
 
-#### 3-4. UIコンポーネントの実装
+**注意:** この例では `ListPageTemplate` を使用しています。詳細は `subscription-manager-admin/AI_DEVELOPMENT_GUIDE.md` を参照してください。
 
-- 必要に応じて `components/{画面名}/` ディレクトリを作成
-- 再利用可能なコンポーネントを実装
-- Tailwind CSSを使用してスタイリング
+#### 3-5. UIコンポーネントの実装
 
-#### 3-5. 認証チェックの実装
+**🤖 AI向け:** 基本的に既存のUIコンポーネントを使用してください。
+
+利用可能なコンポーネント：
+- `Button`, `Input`, `Card`, `Table`, `Modal` など
+- 詳細は `subscription-manager-admin/AI_DEVELOPMENT_GUIDE.md` を参照
+
+**新しいコンポーネントが必要な場合のみ:**
+- `components/ui/` に作成
+- 必ずStorybookに追加（`.stories.tsx` ファイル）
+- `components/index.ts` にエクスポートを追加
+
+#### 3-6. 認証チェックの実装
 
 - 認証が必要なページには、認証チェックを追加
 - `lib/auth.ts` の `getToken()` を使用
 - トークンがない場合は `/login` にリダイレクト
 
-#### 3-6. エラーハンドリングの実装
+#### 3-7. エラーハンドリングの実装
 
 - API呼び出し時のエラーハンドリング
 - ユーザーフレンドリーなエラーメッセージの表示
@@ -448,10 +448,13 @@ export default function {画面名}Page() {
 #### フロント側の確認
 
 - [ ] `lib/api/{画面名}.ts` が作成され、全エンドポイントに対応している
-- [ ] ページコンポーネントが作成されている
+- [ ] ページコンポーネントが作成されている（既存テンプレートを使用）
+- [ ] 既存のUIコンポーネントを使用している（カスタムコンポーネントは最小限）
 - [ ] 認証チェックが実装されている
 - [ ] エラーハンドリングが実装されている
 - [ ] UIが仕様書の要件を満たしている
+- [ ] Supabase風のデザインになっている
+- [ ] Storybookで確認済み（新規コンポーネントを作成した場合）
 
 #### 統合確認
 
@@ -485,10 +488,14 @@ export default function {画面名}Page() {
 
 ### フロント側
 
+- **必ず `subscription-manager-admin/AI_DEVELOPMENT_GUIDE.md` を参照すること**
+- 既存のテンプレート（`ListPageTemplate`, `FormPageTemplate`, `DetailPageTemplate`）を使用すること
+- 既存のUIコンポーネント（`Button`, `Input`, `Card`, `Table`, `Modal`など）を使用すること
 - 認証が必要なページには必ず認証チェックを実装すること
 - API呼び出し時は必ずエラーハンドリングを実装すること
 - 環境変数 `NEXT_PUBLIC_API_URL` が設定されていることを確認すること
-- 既存のUIパターン（`app/login/page.tsx` など）を参考にすること
+- Supabase風のモダンでシンプルなデザインを維持すること
+- 新しいコンポーネントを作成した場合は必ずStorybookに追加すること
 
 ### 統合
 
